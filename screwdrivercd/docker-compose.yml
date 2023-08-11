@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+
+  screwdriver:
+    image: screwdrivercd/screwdriver:stable
+    container_name: screwdriver
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./volumes/local.yaml:/config/local.yaml
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: db
+    hostname: db
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: screwdriver
+    # redmineで日本語を使うため
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci

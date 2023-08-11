@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+  edge:
+    image: svnedge/app:6.0.2-9
+    ports:
+      - "18080:18080"
+      - "3343:3343"
+    environment:
+      SET_PERMS: "false"
+    volumes:
+      - ./volumes/svnedge/csvn/data:/home/svnedge/csvn/data

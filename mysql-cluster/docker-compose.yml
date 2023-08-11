@@ -1,0 +1,54 @@
+version: "3"
+
+networks:
+  cluster:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.0/16
+
+services:
+
+  mysql-cluster-management-node:
+    image: mysql/mysql-cluster:8.0.31
+    container_name: management-node
+    command: ndb_mgmd
+    networks:
+      cluster:
+        ipv4_address: 192.168.0.2
+
+  mysql-cluster-data-node1:
+    image: mysql/mysql-cluster:8.0.31
+    container_name: data-node1
+    command: ndbd
+    depends_on:
+      - "mysql-cluster-management-node"
+    networks:
+      cluster:
+        ipv4_address: 192.168.0.3
+
+  mysql-cluster-data-node2:
+    image: mysql/mysql-cluster:8.0.31
+    container_name: data-node2
+    command: ndbd
+    depends_on:
+      - "mysql-cluster-management-node"
+    networks:
+      cluster:
+        ipv4_address: 192.168.0.4
+
+  mysql-cluster-server-node:
+    image: mysql/mysql-cluster:8.0.31
+    container_name: server-node
+    ports:
+      - "3306:3306"
+    command: mysqld
+    depends_on:
+      - "mysql-cluster-management-node"
+      - "mysql-cluster-data-node1"
+      - "mysql-cluster-data-node2"
+    networks:
+      cluster:
+        ipv4_address: 192.168.0.10
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw

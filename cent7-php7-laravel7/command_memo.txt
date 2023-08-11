@@ -1,0 +1,8 @@
+laravelプロジェクトを作成
+composer create-project --prefer-dist laravel/laravel hoge 7.3
+
+コンテナをエクスポート
+docker export cent7-php7-laravel7_centos_1 > cent7-php7-laravel7_container.tar
+
+イメージをエクスポート
+docker save cent7-php7-laravel7_centos > cent7-php7-laravel7_image.tar

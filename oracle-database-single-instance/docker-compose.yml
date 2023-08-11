@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  db:
+    image: oracle/database:21.3.0-xe
+    container_name: oracle21c
+    ports:
+      - 1521:1521
+    volumes:
+      - ./volumes/opt/oracle/oradata/:/opt/oracle/oradata
+      - ./volumes/opt/oracle/scripts/setup:/opt/oracle/scripts/setup  # コンテナ作成時に実行
+      - ./volumes/opt/oracle/scripts/startup:/opt/oracle/scripts/startup # コンテナ起動時に実行
+    environment:
+      - ORACLE_PWD=passw0rd
+volumes:
+  db-store:

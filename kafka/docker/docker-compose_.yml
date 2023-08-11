@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  kafka:
+    image: docker.io/bitnami/kafka:3.5
+    container_name: kafka-cluster
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./volumes/bitnami/kafka/:/bitnami/kafka
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,EXTERNAL://localhost:29092
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 3000:8080
+    depends_on:
+      - kafka
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+      KAFKA_CLUSTERS_0_NAME: kafka-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-cluster:29092

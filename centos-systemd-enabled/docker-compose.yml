@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+
+  centos:
+    build: centos-Dockerfile
+    container_name: centos
+    # 特権コンテナにし、デバイス接続を許可する
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw

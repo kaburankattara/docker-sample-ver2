@@ -1,0 +1,3 @@
+rootProject.name = "multi-project"
+include("multi-project-A")
+include("multi-project-B")

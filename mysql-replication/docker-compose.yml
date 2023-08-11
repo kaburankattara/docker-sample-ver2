@@ -1,0 +1,53 @@
+version: "3"
+
+networks:
+  mysql-network:
+    driver: bridge
+
+services:
+
+  source:
+    container_name: mysql_source
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./conf/source/:/conf
+      - ./volumes/source/log/:/var/log/mysql/
+      - ./volumes/source/db:/var/lib/mysql
+    tty: true
+    environment:
+      TZ: 'Asia/Tokyo'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'source'
+    command: >
+      bash -c "
+      cp /conf/my.cnf /etc/mysql/conf.d/ &&
+      chmod 644 /etc/mysql/conf.d/my.cnf &&
+      /entrypoint.sh mysqld"
+    networks:
+      - mysql-network
+
+  replica:
+    container_name: mysql_replica
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./conf/replica/:/conf
+      - ./volumes/replica/log/:/var/log/mysql/
+      - ./volumes/replica/db:/var/lib/mysql
+    tty: true
+    environment:
+      TZ: 'Asia/Tokyo'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'replica'
+    command: >
+      bash -c "
+      cp /conf/my.cnf /etc/mysql/conf.d/ &&
+      chmod 644 /etc/mysql/conf.d/my.cnf &&
+      /entrypoint.sh mysqld"
+    networks:
+      - mysql-network
