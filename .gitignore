@@ -1,0 +1,5 @@
+# デフォルトの無視ファイル
+/shelf/
+/.idea/
+.DS_Store
+/mysql/volumes/mysql/datadir/
